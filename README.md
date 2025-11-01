@@ -1,8 +1,10 @@
-# 🤖 AI Council MCP (AI 4대장)
+# 🤖 AI Council MCP - Multi-AI Orchestration Platform
 
-**4개의 최고 AI 모델이 함께 토론하고 답변하는 지능형 RAG 시스템**
+**다중 AI 모델 오케스트레이션: 4개의 최고 AI가 협업하여 최적의 답변을 도출**
 
-Claude Desktop에서 사용 가능한 Model Context Protocol (MCP) 서버로, GPT-4o, Gemini 2.0, Perplexity, Claude 3.5가 협력하여 최적의 답변을 제공합니다.
+Claude Desktop에서 사용하는 Model Context Protocol (MCP) 서버로, GPT-4o, Gemini 2.0, Perplexity, Claude 3.5를 **지능형 라우팅**으로 선택적 활성화하여 토큰을 절약하며 최적 답변을 제공합니다.
+
+**🎯 핵심 혁신: Submarine Mode + Smart Routing = 33-67% 토큰 절약**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org)

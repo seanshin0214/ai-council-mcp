@@ -1,7 +1,7 @@
 {
   "name": "ai-council-mcp",
   "version": "2.0.0",
-  "description": "Advanced AI Council MCP with selective member activation, intelligent routing, and 50-70% token savings through Submarine Mode",
+  "description": "Multi-AI Orchestration Platform: Intelligent routing system that selectively activates GPT-4o, Gemini, Perplexity, and Claude based on question type. Submarine Mode saves 33-67% tokens.",
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
