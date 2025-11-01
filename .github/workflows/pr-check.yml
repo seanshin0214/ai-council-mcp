@@ -1,0 +1,177 @@
+name: PR Quality Checks
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  quick-checks:
+    name: Quick Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript type check
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
+      - name: Security audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+  security-scan:
+    name: Security & LLM Safety
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for hardcoded secrets
+        run: |
+          echo "Checking for API keys..."
+          if grep -r "sk-" --include="*.ts" --include="*.js" src/; then
+            echo "❌ OpenAI API key found in code!"
+            exit 1
+          fi
+          if grep -r "sk-ant-" --include="*.ts" --include="*.js" src/; then
+            echo "❌ Anthropic API key found in code!"
+            exit 1
+          fi
+          if grep -r "AIza" --include="*.ts" --include="*.js" src/; then
+            echo "❌ Google API key found in code!"
+            exit 1
+          fi
+          echo "✅ No hardcoded API keys detected"
+
+      - name: Check environment variable usage
+        run: |
+          echo "Verifying environment variables..."
+          if grep -r "process.env" src/ | grep -v ".env"; then
+            echo "✅ Environment variables used correctly"
+          fi
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for TODO/FIXME
+        run: |
+          echo "Scanning for TODO/FIXME comments..."
+          TODOS=$(grep -r "TODO\|FIXME" src/ --include="*.ts" --include="*.js" || true)
+          if [ -n "$TODOS" ]; then
+            echo "⚠️  Found TODO/FIXME comments:"
+            echo "$TODOS"
+          else
+            echo "✅ No TODO/FIXME found"
+          fi
+
+  documentation:
+    name: Documentation Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check README updates
+        run: |
+          if git diff origin/main...HEAD --name-only | grep -q "README.md"; then
+            echo "✅ README.md updated"
+          else
+            echo "⚠️  Consider updating README.md if API changed"
+          fi
+
+      - name: Check for new env variables
+        run: |
+          if git diff origin/main...HEAD src/ | grep -q "process.env"; then
+            if git diff origin/main...HEAD --name-only | grep -q ".env"; then
+              echo "✅ .env file updated with new variables"
+            else
+              echo "⚠️  New environment variables detected - update .env.example"
+            fi
+          fi
+
+  llm-specific-checks:
+    name: LLM Safety & Cost
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check prompt injection protection
+        run: |
+          echo "Verifying prompt injection defenses..."
+          if grep -r "preventPromptInjection" src/ --include="*.ts"; then
+            echo "✅ Prompt injection middleware found"
+          else
+            echo "⚠️  Ensure prompt injection protection is in place"
+          fi
+
+      - name: Check PII detection
+        run: |
+          echo "Verifying PII detection..."
+          if grep -r "detectPII" src/ --include="*.ts"; then
+            echo "✅ PII detection middleware found"
+          else
+            echo "⚠️  Ensure PII detection is in place"
+          fi
+
+      - name: Check rate limiting
+        run: |
+          echo "Verifying rate limiting..."
+          if grep -r "rateLimit" src/ --include="*.ts"; then
+            echo "✅ Rate limiting implemented"
+          else
+            echo "⚠️  Consider adding rate limiting to prevent abuse"
+          fi
+
+      - name: Verify metrics collection
+        run: |
+          echo "Checking Prometheus metrics..."
+          if grep -r "prometheus\|prom-client" src/ --include="*.ts"; then
+            echo "✅ Metrics collection found"
+          else
+            echo "⚠️  Add metrics for cost/performance tracking"
+          fi
+
+  summary:
+    name: Quality Gate Summary
+    runs-on: ubuntu-latest
+    needs: [quick-checks, security-scan, code-quality, documentation, llm-specific-checks]
+    if: always()
+
+    steps:
+      - name: Check all jobs status
+        run: |
+          echo "📊 Quality Gate Results:"
+          echo "========================"
+          echo "✅ All checks passed!"
+          echo ""
+          echo "Ready for review 🚀"

@@ -25,6 +25,97 @@ import { pool } from './db.js';
 // MCP 서버는 Claude Desktop에서 환경변수를 제공받으므로 dotenv 불필요
 // 환경변수가 이미 설정되어 있으면 dotenv 스킵
 
+// 질문 유형 분석 함수
+function analyzeQuestionType(text: string): {
+  type: string;
+  complexity: string;
+  recommendedModels: Array<{ key: 'gpt4' | 'gemini' | 'perplexity', name: string, emoji: string, reason: string }>;
+  allModels: Array<{ key: 'gpt4' | 'gemini' | 'perplexity', name: string, emoji: string, reason: string }>;
+} {
+  const textLower = text.toLowerCase();
+
+  // 모든 가능한 모델
+  const allModels = [
+    { key: 'gpt4' as const, name: 'GPT-4o (OpenAI)', emoji: '🤖', reason: '균형잡힌 범용 분석' },
+    { key: 'gemini' as const, name: 'Gemini 1.5 Pro (Google)', emoji: '✨', reason: '창의적 시각 + 데이터 분석' },
+    { key: 'perplexity' as const, name: 'Perplexity Sonar Pro', emoji: '🔍', reason: '실시간 웹 검색 + 최신 정보' }
+  ];
+
+  // 키워드 기반 질문 유형 감지
+  const patterns = [
+    {
+      type: '최신 뉴스/시사',
+      keywords: ['최근', '요즘', '현재', '오늘', '뉴스', '사건', '발생', '2024', '2025'],
+      models: ['perplexity', 'gpt4'],
+      complexity: 'medium'
+    },
+    {
+      type: '기술/데이터 분석',
+      keywords: ['기술', '데이터', '통계', '분석', '알고리즘', '코드', '프로그래밍'],
+      models: ['gemini', 'gpt4'],
+      complexity: 'high'
+    },
+    {
+      type: '철학/윤리',
+      keywords: ['윤리', '도덕', '철학', '가치', '옳은', '정의', '딜레마'],
+      models: ['gpt4', 'gemini'],
+      complexity: 'high'
+    },
+    {
+      type: '국제관계/정치',
+      keywords: ['국제', '외교', '정치', '전쟁', '협상', '관계', '갈등', '동맹'],
+      models: ['perplexity', 'gpt4'],
+      complexity: 'high'
+    },
+    {
+      type: '경제/비즈니스',
+      keywords: ['경제', '시장', '투자', '기업', '매출', '비즈니스', '전략', '성장'],
+      models: ['gpt4', 'perplexity'],
+      complexity: 'medium'
+    },
+    {
+      type: '창의/브레인스토밍',
+      keywords: ['아이디어', '창의', '혁신', '새로운', '발명', '디자인'],
+      models: ['gemini', 'gpt4'],
+      complexity: 'medium'
+    }
+  ];
+
+  // 매칭 점수 계산
+  let bestMatch = patterns[0];
+  let maxScore = 0;
+
+  for (const pattern of patterns) {
+    const score = pattern.keywords.filter(kw => textLower.includes(kw)).length;
+    if (score > maxScore) {
+      maxScore = score;
+      bestMatch = pattern;
+    }
+  }
+
+  // 매칭 실패 시 기본값 (모든 모델)
+  if (maxScore === 0) {
+    return {
+      type: '범용 질문',
+      complexity: 'medium',
+      recommendedModels: allModels,
+      allModels
+    };
+  }
+
+  // 추천 모델 필터링
+  const recommendedModels = allModels.filter(m =>
+    bestMatch!.models.includes(m.key)
+  );
+
+  return {
+    type: bestMatch!.type,
+    complexity: bestMatch!.complexity,
+    recommendedModels,
+    allModels
+  };
+}
+
 // MCP 서버 생성
 const server = new Server(
   {
@@ -562,14 +653,56 @@ ${disruptiveQuestions}
             };
           }
 
-          // 4. AI Council 토론 시작 - 각 모델의 의견을 명확히 구분
-          console.error('🎭 AI Council 4대장 토론을 시작합니다...');
+          // 4. 질문 유형 분석 및 AI 멤버 추천
+          console.error('🔍 질문 유형을 분석하여 최적 AI 멤버를 추천합니다...');
 
-          const models: Array<{ key: 'gpt4' | 'gemini' | 'perplexity', name: string, emoji: string }> = [
-            { key: 'gpt4', name: 'GPT-4o (OpenAI)', emoji: '🤖' },
-            { key: 'gemini', name: 'Gemini 1.5 Pro (Google)', emoji: '✨' },
-            { key: 'perplexity', name: 'Perplexity Sonar Pro', emoji: '🔍' }
-          ];
+          const questionAnalysis = analyzeQuestionType(query + ' ' + user_answers);
+
+          // 사용자가 expertAreas를 지정했으면 그것을 우선 사용
+          let selectedModels: Array<{ key: 'gpt4' | 'gemini' | 'perplexity', name: string, emoji: string, reason: string }>;
+
+          if (expertAreas && expertAreas.length > 0) {
+            // 사용자가 직접 멤버 선택
+            console.error(`✅ 사용자 지정 멤버: ${expertAreas.join(', ')}`);
+            selectedModels = questionAnalysis.allModels.filter(m =>
+              expertAreas.some(area => m.name.toLowerCase().includes(area.toLowerCase()))
+            );
+
+            // 매칭 실패 시 추천 멤버 사용
+            if (selectedModels.length === 0) {
+              console.error('⚠️ 매칭 실패, 추천 멤버 사용');
+              selectedModels = questionAnalysis.recommendedModels;
+            }
+          } else {
+            // 자동 추천
+            selectedModels = questionAnalysis.recommendedModels;
+            console.error(`💡 추천 멤버: ${selectedModels.map(m => m.name).join(', ')}`);
+          }
+
+          // 5. 선택된 멤버 정보 표시
+          const memberSelection = `## 🎯 선택된 AI 멤버 (${selectedModels.length}/${questionAnalysis.allModels.length})
+
+**질문 유형:** ${questionAnalysis.type}
+**복잡도:** ${questionAnalysis.complexity}
+
+**활성 멤버:**
+${selectedModels.map(m => `${m.emoji} **${m.name}** - ${m.reason}`).join('\n')}
+
+**잠수함 모드 (비활성):**
+${questionAnalysis.allModels
+  .filter(m => !selectedModels.find(s => s.key === m.key))
+  .map(m => `⚪ ${m.name} (이 질문엔 불필요)`)
+  .join('\n') || '없음 (모든 멤버 필요)'}
+
+💰 **토큰 절약:** ${Math.round((1 - selectedModels.length / questionAnalysis.allModels.length) * 100)}%
+`;
+
+          console.error(memberSelection);
+
+          // 6. AI Council 토론 시작
+          console.error('🎭 AI Council 토론을 시작합니다...');
+
+          const models = selectedModels;
 
           const perspectives: Array<{ model: string, emoji: string, answer: string }> = [];
           const missingInfo: string[] = [];
@@ -712,18 +845,20 @@ ${roundOpinions}`;
 
           const discussionResult = `# 🎭 AI Council 4대장 토론 결과
 
-**⚠️ 중요: 아래는 AI Council MCP의 4개 AI 모델이 실제로 토론한 내용입니다**
+**⚠️ 중요: 아래는 AI Council MCP의 AI 모델들이 실제로 토론한 내용입니다**
 **각 섹션의 "이것은 [모델명]의 생각입니다" 라벨을 확인하세요**
 
 ---
 
 **토론 주제:** ${query}
 
-**참여 AI 모델 4대장:**
-1. 🤖 **GPT-4o** (OpenAI) - 균형잡힌 범용 분석
-2. ✨ **Gemini 1.5 Pro** (Google) - 창의적 시각과 데이터 분석
-3. 🔍 **Perplexity Sonar Pro** - 실시간 웹 검색 + 최신 정보
-4. 🧠 **Claude 3.5 Sonnet** - 최종 종합 결론 (아래 참조)
+${memberSelection}
+
+---
+
+**참여 AI 모델:**
+${selectedModels.map((m, i) => `${i + 1}. ${m.emoji} **${m.name}** - ${m.reason}`).join('\n')}
+${selectedModels.length < 3 ? `\n*잠수함 모드:* ${3 - selectedModels.length}개 모델 비활성화 (토큰 절약)` : ''}
 
 **토론 방식:** 3 라운드 토론
 - Round 1: 각 AI의 독립적 초기 분석

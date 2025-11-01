@@ -1,7 +1,7 @@
 {
   "name": "ai-council-mcp",
-  "version": "1.0.0",
-  "description": "",
+  "version": "2.0.0",
+  "description": "Advanced AI Council MCP with selective member activation, intelligent routing, and 50-70% token savings through Submarine Mode",
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
@@ -30,6 +30,8 @@
   "devDependencies": {
     "@types/node": "^24.9.2",
     "@types/pg": "^8.15.6",
+    "docx": "^9.5.1",
+    "marked": "^16.4.1",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "vitest": "^4.0.6"

@@ -1,0 +1,31 @@
+# AI Council MCP Code Owners
+# These users will be automatically requested for review when files are modified
+
+# Global owners - review everything
+* @sshin
+
+# Security-critical files require security team review
+/src/middleware/security.ts @security-team
+/src/middleware/auth.ts @security-team
+
+# RAG and AI model files require ML team review
+/src/rag/ @ml-team
+/src/router.ts @ml-team
+
+# Database schemas require data team review
+/src/db.ts @data-team
+
+# Infrastructure and deployment
+/docker-compose.yml @devops-team
+/.github/workflows/ @devops-team
+/prometheus.yml @devops-team
+/grafana/ @devops-team
+
+# Documentation
+/README.md @documentation-team
+/examples/ @documentation-team
+
+# Replace @team-name with actual GitHub usernames or team names
+# Example:
+# * @username1 @username2
+# /src/security/ @security-lead
