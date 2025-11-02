@@ -452,6 +452,61 @@ No relevant documents found in the knowledge base.
 
 ---
 
+## ❓ FAQ
+
+### Who pays for API costs?
+
+**You pay for your own API usage.** AI Council MCP runs locally on your computer and uses YOUR API keys. There is no central server or shared API costs.
+
+**Cost structure:**
+- Each user provides their own API keys (OpenAI, Google AI, Perplexity, Anthropic)
+- Each user pays their own API provider directly
+- Smart Routing saves 33-67% compared to always activating all models
+- Semantic caching reduces costs by 70% for repeated queries
+
+**Example:**
+- User A installs AI Council → Uses User A's API keys → User A pays their API bills
+- User B installs AI Council → Uses User B's API keys → User B pays their API bills
+- The creator (@seanshin0214) does NOT pay for anyone's usage
+
+### Is this a SaaS or cloud service?
+
+**No.** AI Council MCP is open-source software that runs entirely on your local computer. You download the code, install it yourself, and configure it with your own API keys.
+
+### Do you collect any data?
+
+**No.** Everything runs locally on your machine. No data is sent to any central server. Your conversations, documents, and API keys stay on your computer.
+
+### What are the typical API costs?
+
+**Approximate costs per AI Council discussion (3 rounds, 4 models):**
+- OpenAI (GPT-4o): ~$0.02-0.05
+- Google AI (Gemini 2.0 Flash): ~$0.001-0.003 (very cheap)
+- Perplexity (Sonar Pro): ~$0.03-0.05
+- Anthropic (Claude 3.5): ~$0.03-0.06
+- **Total: ~$0.08-0.20 per full council discussion**
+
+**With optimizations:**
+- Smart Routing (33-67% savings): ~$0.03-0.13 per discussion
+- Semantic Caching (70% for repeated queries): Near-zero for cached responses
+
+### How is this different from ChatGPT Plus or Claude Pro?
+
+**ChatGPT Plus/Claude Pro:**
+- $20/month subscription
+- Single AI model
+- Closed ecosystem
+- Limited customization
+
+**AI Council MCP:**
+- Pay-per-use (typically $0.03-0.20 per discussion)
+- 4 AI models working together
+- Open source (MIT License)
+- Fully customizable
+- Works inside Claude Desktop
+
+---
+
 ## 📚 Detailed Documentation
 
 - **[Complete Installation Guide](./INSTALLATION.md)** - Step-by-step installation guide
