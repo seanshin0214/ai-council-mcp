@@ -67,6 +67,25 @@ Apply expert personas to each AI model:
 
 ---
 
+## 🔒 Security Warning
+
+**⚠️ NEVER commit API keys to Git!**
+
+- All API keys should ONLY be in `claude_desktop_config.json` (ignored by Git)
+- `.env` files are NOT recommended for this project (causes JSON-RPC issues)
+- If you accidentally commit keys, immediately:
+  1. Revoke and regenerate all exposed API keys
+  2. Remove keys from Git history using `git filter-branch` or BFG Repo-Cleaner
+  3. Force push to GitHub
+
+**API Key Management:**
+- OpenAI keys start with: `sk-proj-...`
+- Google AI keys start with: `AIzaSy...`
+- Perplexity keys start with: `pplx-...`
+- Anthropic keys start with: `sk-ant-...`
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
