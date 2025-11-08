@@ -989,13 +989,14 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
 async function main() {
   console.error('🚀 AI Council MCP Server starting...');
 
-  // 데이터베이스 연결 테스트
+  // 데이터베이스 연결 테스트 (선택적)
   try {
     await pool.query('SELECT NOW()');
     console.error('✅ Database connected');
   } catch (error) {
-    console.error('❌ Database connection failed:', error);
-    process.exit(1);
+    console.error('⚠️ Database connection failed:', error);
+    console.error('⚠️ Server will run without database features');
+    console.error('⚠️ Please start Docker Desktop and restart the server for full functionality');
   }
 
   const transport = new StdioServerTransport();
