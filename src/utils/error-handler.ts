@@ -66,7 +66,7 @@ export class ModelFallbackStrategy {
     if (currentIndex >= 0 && currentIndex < priorities.length - 1) {
       const nextModel = priorities[currentIndex + 1];
       console.log(`🔄 Fallback: ${failedModel} → ${nextModel}`);
-      return nextModel;
+      return nextModel as string;
     }
 
     // 모든 모델 실패

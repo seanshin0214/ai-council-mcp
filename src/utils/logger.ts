@@ -95,7 +95,8 @@ export class Logger {
     const reset = '\x1b[0m';
     const color = colors[entry.level as keyof typeof colors] || '';
 
-    const timestamp = entry.timestamp.split('T')[1].split('.')[0];
+    const timeParts = entry.timestamp.split('T');
+    const timestamp = timeParts[1]?.split('.')[0] || '00:00:00';
     const prefix = `${color}[${timestamp}] [${entry.level}] [${entry.context}]${reset}`;
 
     console.log(`${prefix} ${entry.message}`);
@@ -206,12 +207,18 @@ export class PerformanceLogger {
       if (!byOperation[metric.operation]) {
         byOperation[metric.operation] = { count: 0, avgDuration: 0 };
       }
-      byOperation[metric.operation].count++;
-      byOperation[metric.operation].avgDuration += metric.duration;
+      const opStats = byOperation[metric.operation];
+      if (opStats) {
+        opStats.count++;
+        opStats.avgDuration += metric.duration;
+      }
     }
 
     for (const op in byOperation) {
-      byOperation[op].avgDuration /= byOperation[op].count;
+      const opStats = byOperation[op];
+      if (opStats) {
+        opStats.avgDuration /= opStats.count;
+      }
     }
 
     return {
