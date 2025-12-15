@@ -1,10 +1,14 @@
-# RAG-Powered AI Ecosystem: Building "AI's Second Brain" with 8 MCPs
+# RAG-Powered AI Ecosystem: Building an AI Second Brain with 8 MCPs
 
 *Published: December 2024*
 
 > "A persona is not a declaration—it's knowledge. A debate is not a monologue—it's collective intelligence."
 
-Beyond simple prompt engineering, I built a RAG-based AI agent ecosystem with real knowledge embedded.
+Prompt engineering works until you need your team knowledge, not the internet averages.
+It also breaks the moment you need repeatable reasoning, not one-shot answers.
+
+So I built a RAG-powered AI agent ecosystem:
+it retrieves the right knowledge, applies a thinking method, runs a structured multi-AI debate, and synthesizes into a decision.
 
 ---
 
@@ -443,3 +447,41 @@ MIT License
 > **8 MCPs × 87+ Tools × 2.5MB+ RAG Knowledge × 159+ Expert Personas**
 >
 > This is not prompt engineering. This is knowledge engineering.
+
+---
+
+## Appendix: Viral Distribution Plan
+
+### 1) Platform distribution
+
+| Platform | Audience | Strategy |
+|----------|----------|----------|
+| Hacker News | global builders | Show HN format, 5-8 lines + diagram + repo |
+| Reddit | ML + OSS communities | depth + tradeoffs + failures + ask a question |
+| X (Twitter) | AI/ML network | 10-14 tweet thread + 1-2 diagrams + before/after |
+| LinkedIn | research + business | problem to framework to reusability to impact |
+| Dev.to / Medium | SEO traffic | tags + keywords + clean structure |
+
+### 2) Hook titles (examples)
+
+- I built 8 MCP servers (87+ tools, 2.5MB RAG knowledge) - here is the full ecosystem
+- Multiple models not equal collective intelligence: a 3-round debate engine grounded in RAG
+- Prompt-only personas do not scale. I replaced them with retrievable expertise.
+
+### 3) Visual assets
+
+- Convert ASCII into 1-2 infographic images
+- 30-second demo: query to retrieval to debate to synthesis
+- Before/After screenshots
+
+### 4) Timing
+
+- HN: Tue-Thu 9-11am US time
+- Reddit: 8-10am US time
+- X: avoid major AI news days; repost at a second peak
+
+### 5) Early boost
+
+- ask friends for comments, not just upvotes
+- share with relevant Discord/Slack groups using tradeoffs framing
+- minimal influencer tagging; only when there is a specific relevant angle
