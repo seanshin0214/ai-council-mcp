@@ -1,21 +1,46 @@
 # Blog Posts
 
-Articles about AI Council MCP development and multi-agent debate patterns.
+Articles about the RAG-Powered AI Ecosystem and MCP development.
 
-## Posts
+## Featured Post
 
 | Title | Language | Date |
 |-------|----------|------|
-| [Building a Multi-Agent Debate Engine with MCP](./building-multi-agent-debate-engine-with-mcp.md) | English | Dec 2024 |
-| [MCP로 멀티에이전트 토론 엔진 구축하기](./building-multi-agent-debate-engine-with-mcp_ko.md) | 한국어 | Dec 2024 |
+| [RAG-Powered AI Ecosystem: Building "AI's Second Brain" with 8 MCPs](./rag-powered-ai-ecosystem-8-mcps.md) | English | Dec 2024 |
+| [RAG-Powered AI Ecosystem: 8개 MCP로 구축한 "AI의 두 번째 뇌"](./rag-powered-ai-ecosystem-8-mcps_ko.md) | 한국어 | Dec 2024 |
 
 ## Topics Covered
 
-- Generate → Debate → Evolve pattern
-- MCP (Model Context Protocol) implementation
-- Multi-model orchestration engineering
-- Cost optimization (Submarine Mode)
-- Evaluation frameworks
+- **8 MCP Ecosystem Overview**
+  - AI Council (4-AI Debate)
+  - Socratic Thinking (58 Methods)
+  - Polymath (30+ Domains)
+  - Persona (142+ Experts)
+  - DreamTeam (17 Developers)
+  - QualMaster (Qualitative Research)
+  - QuantMaster (Causal Inference)
+  - DSRMaster (Design Science)
+
+- **Key Innovations**
+  - RAG-Based Personas vs Role Declarations
+  - Structured Multi-AI Debate vs Parallel Calls
+  - Methodology-Driven Thinking vs Instant Answers
+  - Cross-Domain Fusion vs Siloed Knowledge
+
+- **Technology Stack**
+  - MCP (Model Context Protocol)
+  - ChromaDB + SentenceTransformer
+  - PostgreSQL + pgvector
+  - Python / TypeScript
+
+## Statistics
+
+| Metric | Value |
+|--------|-------|
+| Total MCPs | 8 |
+| Total Tools | 87+ |
+| RAG Knowledge | 2.5MB+ |
+| Expert Personas | 159+ |
 
 ## License
 
